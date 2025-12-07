@@ -634,7 +634,8 @@
             g.append('rect')
                 .attr('width', legendWidth)
                 .attr('height', 20)
-                .style('fill', 'url(#legend-gradient)');
+                .style('fill', 'url(#legend-gradient)')
+                .style('stroke', 'none');
             
             // Scale
             const legendScale = d3.scaleLinear()
@@ -643,11 +644,13 @@
             
             const axis = d3.axisBottom(legendScale)
                 .tickFormat(d => d + '%')
-                .tickValues([0, 10, 20, 30, 40, 50, 60, 70, 80]);
+                .tickValues([0, 10, 20, 30, 40, 50, 60, 70, 80])
+                .tickSize(6);
             
             g.append('g')
                 .attr('transform', `translate(0, 20)`)
                 .call(axis)
+                .call(g => g.select(".domain").remove())
                 .style('font-size', '11px');
         }
         
