@@ -6,7 +6,7 @@
     <title>12000 Years of Farmland</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cormorant+Garamond:wght@500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cormorant+Garamond:wght@500;600&display=swap" rel="stylesheet">
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="https://unpkg.com/topojson-client@3"></script>
     <style>
@@ -39,18 +39,20 @@
         h1 {
             font-family: 'Cormorant Garamond', serif;
             font-size: 2.75rem;
-            font-weight: 500;
+            font-weight: 600;
             margin-bottom: 0.375rem;
             color: #8B4513;
             letter-spacing: -0.02em;
+            font-variant-numeric: lining-nums;
         }
         
         .subtitle {
             font-family: 'Cormorant Garamond', serif;
             font-size: 1.25rem;
-            font-weight: 500;
+            font-weight: 600;
             color: #666;
             margin-bottom: 0;
+            font-variant-numeric: lining-nums;
         }
         
         .controls {
@@ -96,9 +98,10 @@
         #yearDisplay {
             font-family: 'Cormorant Garamond', serif;
             font-size: 28px;
-            font-weight: 500;
+            font-weight: 600;
             margin-left: 20px;
             color: #333;
+            font-variant-numeric: lining-nums;
         }
         
         #yearSlider {
@@ -169,10 +172,11 @@
         .chapter-title {
             font-family: 'Cormorant Garamond', serif;
             font-size: 22px;
-            font-weight: 500;
+            font-weight: 600;
             margin: 0 0 6px 0;
             line-height: 1.2;
             color: #222;
+            font-variant-numeric: lining-nums;
         }
         
         .chapter-years {
@@ -308,8 +312,9 @@
             #yearDisplay {
                 font-family: 'Cormorant Garamond', serif;
                 font-size: 1.25rem;
-                font-weight: 500;
+                font-weight: 600;
                 margin-left: 0.5rem;
+                font-variant-numeric: lining-nums;
             }
             
             #yearSlider {
@@ -438,7 +443,7 @@
 <body>
     <div class="container">
         <header>
-            <h1>12000 Years of Farmland</h1>
+            <h1>12000 YEARS OF FARMLAND</h1>
             <p class="subtitle">Animated history of global agricultural land expansion</p>
         </header>
         
@@ -764,7 +769,7 @@
             const isMobile = window.innerWidth <= 768;
             const height = isMobile ? 40 : 60;
             const margin = isMobile 
-                ? {top: 2, right: 20, bottom: 18, left: 0}
+                ? {top: 2, right: 20, bottom: 18, left: 10}
                 : {top: 5, right: 20, bottom: 25, left: 20};
             const legendWidth = Math.min(500, width - margin.left - margin.right);
             
