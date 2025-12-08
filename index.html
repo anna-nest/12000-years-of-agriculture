@@ -682,7 +682,8 @@
                 .attr('stroke-width', 0.3)
                 .attr('stroke-opacity', 0)
                 .style('pointer-events', 'all')
-                .on('mouseenter', function(event, d) {
+                .on('click', function(event, d) {
+                    // Click event works on both desktop and mobile
                     const countryName = d.properties.name;
                     const currentYear = years[currentYearIndex];
                     let match;
@@ -704,8 +705,8 @@
                     tooltipGroup.selectAll('*').remove();
                     
                     const isMobile = window.innerWidth <= 768;
-                    // Mobile needs much larger px value due to high-DPI screens and scaling
-                    const tooltipFontSize = isMobile ? '24px' : '16px';
+                    const dpr = window.devicePixelRatio || 1;
+                    const tooltipFontSize = isMobile ? `${Math.round(14 * dpr)}px` : '16px';
                     
                     tooltipGroup.append('text')
                         .attr('x', mouseX + 10)
@@ -718,11 +719,17 @@
                         .text(`${countryName}: ${value.toFixed(1)}%`);
                     
                     tooltipGroup.style('opacity', 1).raise();
+                    
+                    // Auto-hide after 3 seconds
+                    if (isMobile) {
+                        setTimeout(() => {
+                            tooltipGroup.style('opacity', 0);
+                        }, 3000);
+                    }
                 })
-                .on('touchstart', function(event) {
-                    // Handle touch events for mobile
-                    event.preventDefault();
-                    const countryName = d3.select(this).datum().properties.name;
+                .on('mouseenter', function(event, d) {
+                    const countryName = d.properties.name;
+                    const currentYear = years[currentYearIndex];
                     let match;
                     
                     if (countryName === 'French Guiana') {
@@ -741,11 +748,61 @@
                     
                     tooltipGroup.selectAll('*').remove();
                     
+                    // Calculate font size based on device pixel ratio and screen size
+                    const isMobile = window.innerWidth <= 768;
+                    const dpr = window.devicePixelRatio || 1;
+                    // Mobile: scale up based on pixel ratio. Desktop: standard size
+                    const tooltipFontSize = isMobile ? `${Math.round(14 * dpr)}px` : '16px';
+                    
                     tooltipGroup.append('text')
                         .attr('x', mouseX + 10)
                         .attr('y', mouseY - 10)
                         .attr('fill', '#222')
-                        .attr('font-size', '24px')
+                        .attr('font-size', tooltipFontSize)
+                        .attr('font-weight', 'bold')
+                        .attr('text-anchor', 'start')
+                        .style('text-shadow', '1px 1px 2px white, -1px -1px 2px white, 1px -1px 2px white, -1px 1px 2px white')
+                        .text(`${countryName}: ${value.toFixed(1)}%`);
+                    
+                    tooltipGroup.style('opacity', 1).raise();
+                })
+                .on('touchstart touchend', function(event) {
+                    // Handle touch events for mobile - fires on both start and end
+                    const touches = event.type === 'touchstart' ? event.touches : event.changedTouches;
+                    if (!touches || touches.length === 0) return;
+                    
+                    const countryName = d3.select(this).datum().properties.name;
+                    let match;
+                    
+                    if (countryName === 'French Guiana') {
+                        match = countriesData.find(row => row.Year === currentYear && row.Code === 'GUF');
+                    } else {
+                        match = countriesData.find(row => 
+                            row.Year === currentYear && 
+                            (row.Entity === countryName || 
+                             row.Entity.includes(countryName) ||
+                             countryName.includes(row.Entity))
+                        );
+                    }
+                    
+                    const value = match ? (match.Pct_Total_Agriculture || 0) : 0;
+                    
+                    // Get touch position
+                    const touch = touches[0];
+                    const rect = mapGroup.node().getBoundingClientRect();
+                    const x = touch.clientX - rect.left;
+                    const y = touch.clientY - rect.top;
+                    
+                    tooltipGroup.selectAll('*').remove();
+                    
+                    const dpr = window.devicePixelRatio || 1;
+                    const tooltipFontSize = `${Math.round(14 * dpr)}px`;
+                    
+                    tooltipGroup.append('text')
+                        .attr('x', x + 10)
+                        .attr('y', y - 10)
+                        .attr('fill', '#222')
+                        .attr('font-size', tooltipFontSize)
                         .attr('font-weight', 'bold')
                         .attr('text-anchor', 'start')
                         .style('text-shadow', '1px 1px 2px white, -1px -1px 2px white, 1px -1px 2px white, -1px 1px 2px white')
@@ -753,10 +810,10 @@
                     
                     tooltipGroup.style('opacity', 1).raise();
                     
-                    // Auto-hide after 2 seconds on touch
+                    // Auto-hide after 3 seconds on touch
                     setTimeout(() => {
                         tooltipGroup.style('opacity', 0);
-                    }, 2000);
+                    }, 3000);
                 })
                 .on('mousemove', function(event) {
                     const [mouseX, mouseY] = d3.pointer(event, mapGroup.node());
