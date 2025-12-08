@@ -32,21 +32,22 @@
         
         header {
             text-align: left;
-            margin-bottom: 30px;
-            padding: 30px 0;
+            margin-bottom: 15px;
+            padding: 30px 0 0 0;
         }
         
         h1 {
             font-size: 2.5rem;
             font-weight: 700;
-            margin-bottom: 10px;
-            color: #222;
+            margin-bottom: 0.375rem;
+            color: #4CAF50;
+            letter-spacing: 0.02em;
         }
         
         .subtitle {
-            font-size: 1.1rem;
+            font-size: 1.25rem;
             color: #666;
-            margin-bottom: 20px;
+            margin-bottom: 0;
         }
         
         .controls {
@@ -222,7 +223,7 @@
         }
         
         #zoom-reset {
-            font-size: 16px;
+            font-size: 20px;
         }
         
         .legend {
@@ -275,12 +276,12 @@
             h1 {
                 font-size: 1.5rem;
                 line-height: 1.2;
-                margin-bottom: 0.5rem;
+                margin-bottom: 0.25rem;
             }
             
             .subtitle {
-                font-size: 0.875rem;
-                margin-bottom: 0.75rem;
+                font-size: 1rem;
+                margin-bottom: 0;
             }
             
             /* Controls - compact to fit on one line */
@@ -306,27 +307,43 @@
             #yearSlider {
                 margin-top: 0.5rem;
                 /* Ensure touch-friendly slider */
-                height: 12px;
+                height: 6px;
                 -webkit-appearance: none;
                 appearance: none;
+                background: linear-gradient(to right, #2196F3 0%, #2196F3 var(--slider-progress, 0%), #ddd var(--slider-progress, 0%), #ddd 100%);
+                border-radius: 3px;
+                outline: none;
             }
             
             #yearSlider::-webkit-slider-thumb {
                 -webkit-appearance: none;
-                width: 24px;
-                height: 24px;
-                background: #4CAF50;
+                width: 18px;
+                height: 18px;
+                background: #2196F3;
                 cursor: pointer;
                 border-radius: 50%;
+                border: 2px solid white;
+                box-shadow: 0 1px 3px rgba(0,0,0,0.3);
             }
             
             #yearSlider::-moz-range-thumb {
-                width: 24px;
-                height: 24px;
-                background: #4CAF50;
+                width: 18px;
+                height: 18px;
+                background: #2196F3;
                 cursor: pointer;
                 border-radius: 50%;
-                border: none;
+                border: 2px solid white;
+                box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+            }
+            
+            #yearSlider::-moz-range-track {
+                background: transparent;
+            }
+            
+            #yearSlider::-moz-range-progress {
+                background: #2196F3;
+                height: 6px;
+                border-radius: 3px;
             }
             
             /* Map takes full width */
@@ -363,18 +380,20 @@
             /* Legend - thinner and repositioned before sidebar */
             .legend {
                 order: -1; /* Move before sidebar */
-                margin-top: 1rem;
-                padding: 0.5rem 0.75rem;
+                margin-top: 0.75rem;
+                padding: 0.25rem 0.75rem 0.5rem 0.75rem;
+                background: transparent;
+                border-radius: 0;
             }
             
             .legend-title {
                 font-size: 0.75rem;
-                margin-bottom: 0.375rem;
+                margin-bottom: 0.25rem;
                 margin-left: 1.25rem;
             }
             
             #legend {
-                height: 45px !important;
+                height: 40px !important;
             }
             
             /* Sidebar */
@@ -409,8 +428,8 @@
 <body>
     <div class="container">
         <header>
-            <h1>12,000 Years of Farmland</h1>
-            <p class="subtitle">An animated history of global agricultural land expansion</p>
+            <h1>12,000 YEARS OF FARMLAND</h1>
+            <p class="subtitle">Animated history of global agricultural land expansion</p>
         </header>
         
         <div class="controls">
@@ -433,6 +452,11 @@
                 </div>
             </div>
             
+            <div class="legend">
+                <div class="legend-title">% of farmed land</div>
+                <svg id="legend" width="100%" height="60"></svg>
+            </div>
+            
             <div class="sidebar" id="sidebar">
                 <div id="pause-indicator" class="pause-indicator" style="display: none;">
                     ⏸ PAUSED - PRESS PLAY TO CONTINUE
@@ -444,10 +468,6 @@
                 <div class="chapter-description" id="chapter-description"></div>
             </div>
         </div>
-        
-        <div class="legend">
-            <div class="legend-title">% of farmed land</div>
-            <svg id="legend" width="100%" height="60"></svg>
         </div>
         
         <footer>
@@ -732,9 +752,9 @@
             
             // Check if mobile
             const isMobile = window.innerWidth <= 768;
-            const height = isMobile ? 45 : 60;
+            const height = isMobile ? 40 : 60;
             const margin = isMobile 
-                ? {top: 3, right: 20, bottom: 20, left: 20}
+                ? {top: 2, right: 20, bottom: 18, left: 20}
                 : {top: 5, right: 20, bottom: 25, left: 20};
             const legendWidth = Math.min(500, width - margin.left - margin.right);
             
@@ -918,7 +938,12 @@
             
             // Update display
             document.getElementById('yearDisplay').textContent = currentYear > 0 ? currentYear : `${Math.abs(currentYear)} BC`;
-            document.getElementById('yearSlider').value = currentYearIndex;
+            const slider = document.getElementById('yearSlider');
+            slider.value = currentYearIndex;
+            
+            // Update slider progress (for visual track on mobile)
+            const progress = (currentYearIndex / (years.length - 1)) * 100;
+            slider.style.setProperty('--slider-progress', `${progress}%`);
             
             // Update sidebar
             const sidebar = document.getElementById('sidebar');
