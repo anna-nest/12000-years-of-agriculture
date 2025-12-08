@@ -6,7 +6,7 @@
     <title>12000 Years of Farmland</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=EB+Garamond:wght@500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=EB+Garamond:wght@500;600&display=swap" rel="stylesheet">
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="https://unpkg.com/topojson-client@3"></script>
     <style>
@@ -27,7 +27,7 @@
         .container {
             max-width: 1400px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 20px 12px;
         }
         
         header {
@@ -40,7 +40,7 @@
             font-family: 'EB Garamond', serif;
             font-size: 2.75rem;
             font-weight: 500;
-            margin-bottom: 0.25rem;
+            margin-bottom: 0.125rem;
             color: #8B4513;
             letter-spacing: -0.02em;
             font-variant-numeric: lining-nums;
@@ -51,7 +51,7 @@
             font-size: 1.25rem;
             font-weight: 500;
             color: #666;
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
             font-variant-numeric: lining-nums;
         }
         
@@ -238,7 +238,7 @@
         }
         
         .legend {
-            margin-top: 20px;
+            margin-top: 10px;
             padding: 10px 15px;
             background: #f9f9f9;
             border-radius: 8px;
@@ -287,13 +287,15 @@
             
             /* Headline - smaller to fit on one line */
             h1 {
-                font-size: 1.5rem;
+                font-size: 1.625rem;
+                font-weight: 600;
                 line-height: 1.2;
                 margin-bottom: 0.25rem;
             }
             
             .subtitle {
                 font-size: 1rem;
+                font-weight: 600;
                 margin-bottom: 0;
             }
             
@@ -315,7 +317,7 @@
             #yearDisplay {
                 font-family: 'EB Garamond', serif;
                 font-size: 1.25rem;
-                font-weight: 500;
+                font-weight: 600;
                 margin-left: 0.5rem;
                 font-variant-numeric: lining-nums;
             }
@@ -423,7 +425,8 @@
             }
             
             .chapter-title {
-                font-size: 1.25rem;
+                font-size: 1.125rem;
+                font-weight: 600;
             }
             
             .chapter-description {
@@ -485,7 +488,6 @@
                 <div class="chapter-divider"></div>
                 <div class="chapter-description" id="chapter-description"></div>
             </div>
-        </div>
         </div>
         
         <footer>
@@ -701,7 +703,7 @@
                     tooltipGroup.selectAll('*').remove();
                     
                     const isMobile = window.innerWidth <= 768;
-                    const tooltipFontSize = isMobile ? '15px' : '16px';
+                    const tooltipFontSize = isMobile ? '17px' : '16px';
                     
                     tooltipGroup.append('text')
                         .attr('x', mouseX + 10)
