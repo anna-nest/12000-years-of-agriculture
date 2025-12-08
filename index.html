@@ -704,7 +704,8 @@
                     tooltipGroup.selectAll('*').remove();
                     
                     const isMobile = window.innerWidth <= 768;
-                    const tooltipFontSize = isMobile ? '17px' : '16px';
+                    // Mobile needs much larger px value due to high-DPI screens and scaling
+                    const tooltipFontSize = isMobile ? '24px' : '16px';
                     
                     tooltipGroup.append('text')
                         .attr('x', mouseX + 10)
@@ -717,6 +718,45 @@
                         .text(`${countryName}: ${value.toFixed(1)}%`);
                     
                     tooltipGroup.style('opacity', 1).raise();
+                })
+                .on('touchstart', function(event) {
+                    // Handle touch events for mobile
+                    event.preventDefault();
+                    const countryName = d3.select(this).datum().properties.name;
+                    let match;
+                    
+                    if (countryName === 'French Guiana') {
+                        match = countriesData.find(row => row.Year === currentYear && row.Code === 'GUF');
+                    } else {
+                        match = countriesData.find(row => 
+                            row.Year === currentYear && 
+                            (row.Entity === countryName || 
+                             row.Entity.includes(countryName) ||
+                             countryName.includes(row.Entity))
+                        );
+                    }
+                    
+                    const value = match ? (match.Pct_Total_Agriculture || 0) : 0;
+                    const [mouseX, mouseY] = d3.pointer(event, mapGroup.node());
+                    
+                    tooltipGroup.selectAll('*').remove();
+                    
+                    tooltipGroup.append('text')
+                        .attr('x', mouseX + 10)
+                        .attr('y', mouseY - 10)
+                        .attr('fill', '#222')
+                        .attr('font-size', '24px')
+                        .attr('font-weight', 'bold')
+                        .attr('text-anchor', 'start')
+                        .style('text-shadow', '1px 1px 2px white, -1px -1px 2px white, 1px -1px 2px white, -1px 1px 2px white')
+                        .text(`${countryName}: ${value.toFixed(1)}%`);
+                    
+                    tooltipGroup.style('opacity', 1).raise();
+                    
+                    // Auto-hide after 2 seconds on touch
+                    setTimeout(() => {
+                        tooltipGroup.style('opacity', 0);
+                    }, 2000);
                 })
                 .on('mousemove', function(event) {
                     const [mouseX, mouseY] = d3.pointer(event, mapGroup.node());
